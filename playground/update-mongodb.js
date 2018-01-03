@@ -33,6 +33,6 @@ MongoClient.connect('mongodb://localhost:27017/todo', (err, db) => {
     }, {
         returnOriginal: false
     }).then((result) => {
-        console.log(result)
+        console.log(result) 
     })
 })
