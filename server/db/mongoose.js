@@ -1,7 +1,7 @@
 var mongoose = require('mongoose'); 
 
 mongoose.Promise = global.Promise
-mongoose.connect('mongodb://naveen:nyg201yy@ds245687.mlab.com:45687/todo-api')
+mongoose.connect(process.env.DATABASEURL || 'mongodb://127.0.0.1:27017')
 
 module.exports = {
     mongoose,
