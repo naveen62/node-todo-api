@@ -15,7 +15,9 @@ var todos = [{
 },
 {
     _id: new ObjectID(),
-    text: 'Second test todo'
+    text: 'Second test todo',
+    completed: true,
+    completedAt: 123
 }
 ]
 // beforeEach runs before every test case
@@ -157,5 +159,46 @@ describe('DELETE /todos/:id', () => {
                 expect(undefined).toBe()
             })
             .end(done) 
+    })
+})
+describe('PATCH /todos/:id', () => {
+    it('should update the todo', (done) => {
+        var idHex = todos[0]._id.toHexString();
+        
+        var  text = 'changed from test'
+        var  completed = true
+        
+        request(app)
+            .patch(`/todos/${idHex}`)
+            .send({
+                text,
+                completed
+            })
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.todo).toInclude({
+                    text,
+                    completed
+                });
+                expect(res.body.todo.completedAt).toBeA('number')
+            })
+            .end(done)
+            
+    })
+    it('should clear completedAt when todo is not completed', (done) => {
+        var idHex = todos[1]._id.toHexString();
+        var send = {
+            text: 'changed from test2',
+            completed: false
+        }
+        request(app)
+            .patch(`/todos/${idHex}`)
+            .send(send)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.todo).toInclude(send)
+                expect(res.body.todo.completedAt).toNotExist()
+            })
+            .end(done);
     })
 })
